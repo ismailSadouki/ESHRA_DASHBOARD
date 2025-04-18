@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Sustainability Dashboard</title>
+    <!-- Link to Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+    <div class="container mx-auto p-6">
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-600">🏢 AI-Powered Sustainability Dashboard</h1>
+            <p class="mt-4 text-xl text-gray-600">Optimize your building's resources with data-driven insights</p>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <div class="flex gap-12">
+            <!-- Sidebar -->
+            <div class="w-1/4 bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-semibold text-gray-700">🔧 Select Optimization Focus</h3>
+                <select id="optimizationMethod" onchange="updateGraph()" class="mt-4 p-2 border rounded-md w-full">
+                    <option value="Gas Consumption">Gas Consumption</option>
+                    <option value="Water Usage">Water Usage</option>
+                    <option value="Energy Efficiency">Energy Efficiency</option>
+                </select>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="flex-1 bg-white p-6 rounded-lg shadow-lg">
+                <h2 id="chartTitle" class="text-3xl font-semibold text-gray-700">Gas Consumption Trend</h2>
+                <div id="chartContainer" class="mt-6"></div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="text-center mt-12">
+            <p class="text-gray-600">Developed by Ismail Sadouki ❤️</p>
+        </footer>
+    </div>
+
+    <!-- Script to Fetch Data and Render Charts -->
+    <script>
+        function updateGraph() {
+            const method = document.getElementById("optimizationMethod").value;
+            fetch(`/data`)
+                .then(response => response.json())
+                .then(data => {
+                    let trace;
+                    let chartTitle;
+
+                    if (method === "Gas Consumption") {
+                        trace = {
+                            x: data.timestamp,
+                            y: data.gas,
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'Gas Consumption',
+                            line: { color: 'blue' }
+                        };
+                        chartTitle = "Gas Consumption Over Time";
+                    } else if (method === "Water Usage") {
+                        trace = {
+                            x: data.timestamp,
+                            y: data.water,
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'Water Consumption',
+                            line: { color: 'green' }
+                        };
+                        chartTitle = "Water Consumption Over Time";
+                    } else {
+                        trace = {
+                            x: data.timestamp,
+                            y: data.energy,
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'Energy Consumption',
+                            line: { color: 'red' }
+                        };
+                        chartTitle = "Energy Consumption Over Time";
+                    }
+
+                    const layout = {
+                        title: chartTitle,
+                        xaxis: { title: 'Timestamp' },
+                        yaxis: { title: 'Consumption' }
+                    };
+
+                    Plotly.newPlot('chartContainer', [trace], layout);
+                    document.getElementById("chartTitle").innerText = chartTitle;
+                });
+        }
+
+        // Initial Graph Load
+        window.onload = updateGraph;
+    </script>
+</body>
+</html>
+

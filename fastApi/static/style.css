@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+    margin: 40px;
+    background: #f6f6f6;
+}
+select {
+    padding: 10px;
+    margin: 10px 0;
+    width: 300px;
+}
+button {
+    padding: 8px 12px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #005f99;
+}
+
