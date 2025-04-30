@@ -6,6 +6,7 @@ from sklearn.ensemble import IsolationForest
 from statsmodels.tsa.arima.model import ARIMA
 import warnings
 from scipy.optimize import linprog
+<<<<<<< HEAD
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")
@@ -23,6 +24,21 @@ def load_data():
     return df
 
 # Cache anomaly detection model
+=======
+from utils import DataManager
+
+
+
+warnings.filterwarnings("ignore")
+
+st.set_page_config(page_title="🛢️ Gas Consumption Optimization", layout="wide")
+st.title("🛢️ Gas Consumption Optimization")
+
+
+# Load Data
+dm = DataManager()
+data = dm.load_gas()
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 @st.cache_data
 def detect_anomalies(df, contamination=0.05):
     iso = IsolationForest(contamination=contamination, random_state=42)
@@ -30,14 +46,19 @@ def detect_anomalies(df, contamination=0.05):
     df['anomaly'] = df['anomaly'].apply(lambda x: 1 if x == -1 else 0)
     return df
 
+<<<<<<< HEAD
 # Forecasting with ARIMA model (Better than exponential smoothing)
 def arima_forecasting(df, order=(5, 1, 0)):
     # ARIMA model for forecasting gas consumption
+=======
+def arima_forecasting(df, order=(5, 1, 0)):
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     model = ARIMA(df['consumption'], order=order)
     model_fit = model.fit()
     forecast = model_fit.forecast(steps=48)  # Forecast next 48 hours (or any suitable time period)
     return forecast
 
+<<<<<<< HEAD
 # Linear programming for consumption optimization (minimizing peak consumption)
 def optimize_consumption(df, peak_hours=[17, 18, 19, 20]):
     # Simple linear programming approach to minimize consumption during peak hours
@@ -45,18 +66,31 @@ def optimize_consumption(df, peak_hours=[17, 18, 19, 20]):
     consumption_off_peak = df[~df['hour'].isin(peak_hours)]['consumption'].values
     
     # Linear Programming: Minimize peak consumption under a constraint
+=======
+def optimize_consumption(df, peak_hours=[17, 18, 19, 20]):
+    consumption_peak = df[df['hour'].isin(peak_hours)]['consumption'].values
+    consumption_off_peak = df[~df['hour'].isin(peak_hours)]['consumption'].values
+    
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     c = np.ones(len(consumption_peak))  # Objective function: minimize total peak consumption
     A = [np.ones(len(consumption_peak))]  # Constraint: peak consumption <= limit
     b = [500]  # Max peak consumption (arbitrary value)
     
+<<<<<<< HEAD
     # Perform optimization
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     result = linprog(c, A_ub=A, b_ub=b, method='highs')
     optimized_peak_consumption = result.x  # Optimized consumption distribution during peak hours
     return optimized_peak_consumption
 
+<<<<<<< HEAD
 data = load_data()
 
 # Sidebar configuration for the optimization model
+=======
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.header("🔧 Configuration")
 optimization_method = st.sidebar.selectbox("Select Optimization Method", ["Energy Savings", "Cost Reduction", "Peak Consumption", "Smart Optimization"])
 contamination = st.sidebar.slider("Anomaly Sensitivity (0 = strict)", 0.01, 0.15, 0.05, step=0.01)
@@ -64,10 +98,15 @@ arima_order = st.sidebar.slider("ARIMA Model Order (p)", 1, 10, 5)
 arima_d = st.sidebar.slider("ARIMA Model Differencing (d)", 0, 3, 1)
 arima_q = st.sidebar.slider("ARIMA Model Order (q)", 0, 10, 0)
 
+<<<<<<< HEAD
 # Anomaly Detection for consumption optimization
 data = detect_anomalies(data, contamination)
 
 # Smart Optimization based on method selected
+=======
+data = detect_anomalies(data, contamination)
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 if optimization_method == "Energy Savings":
 
     st.subheader("🛢️ Estimated Energy Savings")
@@ -76,11 +115,17 @@ if optimization_method == "Energy Savings":
     energy_savings = total_consumption - anomaly_consumption
     st.metric("🛢️ Estimated Savings", f"{energy_savings:,.2f} m³")
     
+<<<<<<< HEAD
     # Energy Savings Insight
     st.write("### Anomalies in Gas Consumption")
     st.write(f"Anomalies detected in consumption account for **{energy_savings:,.2f} m³** of gas. This is an opportunity to optimize operations by investigating and addressing these irregularities.")
     
     # Energy Savings Visualization
+=======
+    st.write("### Anomalies in Gas Consumption")
+    st.write(f"Anomalies detected in consumption account for **{energy_savings:,.2f} m³** of gas. This is an opportunity to optimize operations by investigating and addressing these irregularities.")
+    
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     st.subheader("📊 Gas Consumption with Anomalies")
     fig1 = go.Figure()
     fig1.add_trace(go.Scatter(x=data['timestamp'], y=data['consumption'], name='Gas Consumption', line=dict(color='skyblue')))
@@ -100,11 +145,17 @@ elif optimization_method == "Cost Reduction":
     cost_savings = total_cost - anomaly_cost
     st.metric("💰 Estimated Savings", f"${cost_savings:,.2f}")
     
+<<<<<<< HEAD
     # Cost Reduction Insight
     st.write("### Cost Implications of Anomalies")
     st.write(f"By addressing anomalies, an estimated **${cost_savings:,.2f}** can be saved annually. Focus on areas with high anomaly rates for the most cost-effective adjustments.")
     
     # Cost Reduction Visualization
+=======
+    st.write("### Cost Implications of Anomalies")
+    st.write(f"By addressing anomalies, an estimated **${cost_savings:,.2f}** can be saved annually. Focus on areas with high anomaly rates for the most cost-effective adjustments.")
+    
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     st.subheader("📊 Cost Breakdown")
     fig2 = go.Figure()
     fig2.add_trace(go.Bar(x=['Total Cost', 'Anomaly Cost', 'Savings'], 
@@ -115,15 +166,23 @@ elif optimization_method == "Cost Reduction":
 
 elif optimization_method == "Peak Consumption":
     st.subheader("⏰ Peak Consumption Analysis")
+<<<<<<< HEAD
     # Show peak consumption analysis
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     peak_consumption = data.groupby('hour')['consumption'].mean().sort_values(ascending=False).head(5)
     st.write("Top 5 Peak Consumption Hours:")
     st.write(peak_consumption)
 
+<<<<<<< HEAD
     # Peak Consumption Insight
     st.write(f"Peak consumption is highest during **{', '.join(map(str, peak_consumption.index))}** hours. Adjusting usage during these hours can significantly reduce costs and improve energy efficiency.")
     
     # Peak Consumption Visualization
+=======
+    st.write(f"Peak consumption is highest during **{', '.join(map(str, peak_consumption.index))}** hours. Adjusting usage during these hours can significantly reduce costs and improve energy efficiency.")
+    
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     st.subheader("📊 Peak Consumption Visualization")
     fig3 = go.Figure()
     fig3.add_trace(go.Bar(x=peak_consumption.index, y=peak_consumption.values, 
@@ -137,10 +196,15 @@ elif optimization_method == "Smart Optimization":
     st.write("Optimized Peak Consumption Distribution:")
     st.write(optimized_peak_consumption)
 
+<<<<<<< HEAD
     # Smart Optimization Insight
     st.write(f"By distributing consumption more evenly across non-peak hours, peak consumption can be reduced by **{np.sum(optimized_peak_consumption):.2f} m³**. This approach minimizes energy costs while still meeting needs.")
     
     # Smart Optimization Visualization
+=======
+    st.write(f"By distributing consumption more evenly across non-peak hours, peak consumption can be reduced by **{np.sum(optimized_peak_consumption):.2f} m³**. This approach minimizes energy costs while still meeting needs.")
+    
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     st.subheader("📊 Optimized Peak Consumption Visualization")
     fig4 = go.Figure()
     fig4.add_trace(go.Scatter(x=data[data['hour'].isin([17, 18, 19, 20])]['timestamp'], 
@@ -150,7 +214,10 @@ elif optimization_method == "Smart Optimization":
     fig4.update_layout(title="Optimized Gas Consumption During Peak Hours", xaxis_title="Timestamp", yaxis_title="Gas Consumption (m³)")
     st.plotly_chart(fig4, use_container_width=True)
 
+<<<<<<< HEAD
 # Forecasting with ARIMA
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("📊 Forecasted Gas Consumption with ARIMA")
 forecast = arima_forecasting(data, order=(arima_order, arima_d, arima_q))
 fig5 = go.Figure()

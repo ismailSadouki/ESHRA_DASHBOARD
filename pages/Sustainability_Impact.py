@@ -8,6 +8,7 @@ from sklearn.ensemble import IsolationForest
 from statsmodels.tsa.arima.model import ARIMA
 import warnings
 from sklearn.metrics import silhouette_score
+<<<<<<< HEAD
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")
@@ -38,39 +39,76 @@ st.sidebar.title("⚙️ Configuration")
 campus = st.sidebar.selectbox("Select Campus", sorted(building['campus_id'].unique()))
 
 # Customizable Policy Effects
+=======
+from utils import DataManager
+
+warnings.filterwarnings("ignore")
+
+st.set_page_config(page_title="🌿 Smart Sustainability Dashboard", layout="wide")
+st.title("🌱 Smart Sustainability Optimization")
+
+
+# Load data
+dm = DataManager()
+building = dm.load_energy()
+gas = dm.load_gas()
+water = dm.load_water()
+
+st.sidebar.title("⚙️ Configuration")
+campus = st.sidebar.selectbox("Select Campus", sorted(building['campus_id'].unique()))
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.subheader("Customize Policy Impact")
 heating_reduction = st.sidebar.slider("Heating Reduction (%)", 0, 20, 10, 1) / 100
 water_efficiency = st.sidebar.slider("Water Efficiency (%)", 0, 50, 15, 1) / 100
 solar_efficiency = st.sidebar.slider("Solar Panel Efficiency (%)", 0, 50, 25, 1) / 100
 hours_reduction = st.sidebar.slider("Building Hours Reduction (%)", 0, 50, 10, 1) / 100
 
+<<<<<<< HEAD
 # Customizable Simulation Parameters
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.subheader("Simulation Parameters")
 years = st.sidebar.slider("Number of Years", 1, 50, 10, 1)
 simulations = st.sidebar.slider("Number of Simulations", 100, 5000, 1000, 100)
 
+<<<<<<< HEAD
 # Variable Randomization
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.subheader("Consumption Variability")
 electricity_variability = st.sidebar.slider("Electricity Consumption Variability (%)", 0, 20, 5, 1) / 100
 gas_variability = st.sidebar.slider("Gas Consumption Variability (%)", 0, 20, 5, 1) / 100
 water_variability = st.sidebar.slider("Water Consumption Variability (%)", 0, 20, 5, 1) / 100
 
+<<<<<<< HEAD
 # CO₂ factors (could be adjusted by the user)
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.subheader("CO₂ Emission Factors (kg per unit)")
 electricity_co2_factor = st.sidebar.number_input("Electricity CO₂ Factor (kg/kWh)", value=0.233)
 gas_co2_factor = st.sidebar.number_input("Gas CO₂ Factor (kg/m³)", value=2.204)
 water_co2_factor = st.sidebar.number_input("Water CO₂ Factor (kg/L)", value=0.0015)
 
+<<<<<<< HEAD
 # Policies selected by user
 policy = st.sidebar.multiselect("Apply Policies", 
     ["Reduce Heating by 10%", "Efficient Water Fixtures", "Solar Panels Installed", "Shorten Building Hours"])
 
 # Filter data based on selected campus
+=======
+policy = st.sidebar.multiselect("Apply Policies", 
+    ["Reduce Heating by 10%", "Efficient Water Fixtures", "Solar Panels Installed", "Shorten Building Hours"])
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 bld_c = building[building["campus_id"] == campus]
 gas_c = gas[gas["campus_id"] == campus]
 water_c = water[water["campus_id"] == campus]
 
+<<<<<<< HEAD
 # Benchmarking: Compare current campus with others
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("📊 Building Consumption Benchmarking")
 grouped = building.groupby("campus_id")["consumption"].mean()
 best = grouped.nsmallest(1).values[0]
@@ -82,7 +120,10 @@ st.metric("Efficiency Score (1=Best)", f"{efficiency_ratio:.2f}")
 fig = px.bar(grouped, title="Average Electricity Consumption by Campus")
 st.plotly_chart(fig, use_container_width=True)
 
+<<<<<<< HEAD
 # CO₂ Emissions Estimation: Model based on consumption
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("🌍 CO₂ Emissions Estimation")
 total_co2 = (
     bld_c["consumption"].sum() * electricity_co2_factor
@@ -90,7 +131,10 @@ total_co2 = (
     + water_c["consumption"].sum() * water_co2_factor
 )
 
+<<<<<<< HEAD
 # Impact of applied policies
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 policy_impact = 0
 impact_details = {}
 
@@ -114,15 +158,23 @@ if "Shorten Building Hours" in policy:
     policy_impact += hours_impact
     impact_details["Building Hours Reduction"] = hours_impact
 
+<<<<<<< HEAD
 # CO₂ savings due to policies
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 reduction = total_co2 - policy_impact
 st.metric("Estimated CO₂ After Policies (kg)", f"{reduction:,.2f}")
 st.metric("CO₂ Saved Due to Policies (kg)", f"{policy_impact:,.2f}")
 
+<<<<<<< HEAD
 # Show Real CO₂ Emissions Before and After Policies
 st.subheader("🌿 Real and Simulated CO₂ Emissions Comparison")
 
 # Table with real, impact, and benefit details
+=======
+st.subheader("🌿 Real and Simulated CO₂ Emissions Comparison")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 real_data = {
     "Initial CO₂ Emissions (kg)": total_co2,
     "CO₂ Saved by Policies (kg)": policy_impact,
@@ -130,10 +182,15 @@ real_data = {
 }
 st.write(pd.DataFrame([real_data]))
 
+<<<<<<< HEAD
 # Visualize the Impact of Policies on CO₂ Emissions
 st.subheader("📊 Policy Impact Visualization")
 
 # Create a bar chart for visualizing the policies' effects
+=======
+st.subheader("📊 Policy Impact Visualization")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 policy_names = list(impact_details.keys())
 impact_values = list(impact_details.values())
 
@@ -143,17 +200,25 @@ impact_df = impact_df[impact_df["Impact (kg CO2)"] > 0]  # Filter out non-applie
 fig = px.bar(impact_df, x="Policy", y="Impact (kg CO2)", title="Impact of Policies on CO₂ Emissions", color="Policy")
 st.plotly_chart(fig, use_container_width=True)
 
+<<<<<<< HEAD
 # Policy Simulation: Monte Carlo Simulation to model policy impact over customizable years
 st.subheader("💡 Policy Simulation (Monte Carlo)")
 
 # Define parameters for the Monte Carlo simulation
+=======
+st.subheader("💡 Policy Simulation (Monte Carlo)")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 base_consumption = {
     "electricity": bld_c["consumption"].mean(),
     "gas": gas_c["consumption"].mean(),
     "water": water_c["consumption"].mean()
 }
 
+<<<<<<< HEAD
 # Simulation function
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 def run_simulation(base_consumption, policy_impact, years=10, simulations=1000):
     np.random.seed(42)
     simulated_results = []
@@ -162,17 +227,26 @@ def run_simulation(base_consumption, policy_impact, years=10, simulations=1000):
         yearly_changes = []
         
         for year in range(years):
+<<<<<<< HEAD
             # Apply random percentage change (simulate real-world variability)
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
             electricity_change = np.random.normal(0, electricity_variability)  # Variability in electricity consumption
             gas_change = np.random.normal(0, gas_variability)  # Variability in gas consumption
             water_change = np.random.normal(0, water_variability)  # Variability in water consumption
             
+<<<<<<< HEAD
             # Adjust consumption based on policies
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
             simulated_electricity = base_consumption["electricity"] * (1 + electricity_change)
             simulated_gas = base_consumption["gas"] * (1 + gas_change)
             simulated_water = base_consumption["water"] * (1 + water_change)
             
+<<<<<<< HEAD
             # Apply policy impacts (e.g., reducing heating or adding solar panels)
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
             if "Reduce Heating by 10%" in policy:
                 simulated_gas *= (1 - heating_reduction)  # Apply custom heating reduction
             if "Efficient Water Fixtures" in policy:
@@ -182,7 +256,10 @@ def run_simulation(base_consumption, policy_impact, years=10, simulations=1000):
             if "Shorten Building Hours" in policy:
                 simulated_electricity *= (1 - hours_reduction)  # Apply custom building hours reduction
             
+<<<<<<< HEAD
             # Calculate CO₂ emissions for this year
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
             simulated_co2 = (
                 simulated_electricity * electricity_co2_factor +
                 simulated_gas * gas_co2_factor +
@@ -190,11 +267,15 @@ def run_simulation(base_consumption, policy_impact, years=10, simulations=1000):
             )
             yearly_changes.append(simulated_co2)
         
+<<<<<<< HEAD
         # Store the results of the simulation
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
         simulated_results.append(np.sum(yearly_changes))
     
     return simulated_results
 
+<<<<<<< HEAD
 # Run the simulation
 simulation_results = run_simulation(base_consumption, policy_impact, years, simulations)
 
@@ -206,6 +287,15 @@ fig = px.histogram(simulation_results, nbins=30, title="Simulated CO₂ Emission
 st.plotly_chart(fig, use_container_width=True)
 
 # Display average result
+=======
+simulation_results = run_simulation(base_consumption, policy_impact, years, simulations)
+
+st.write(f"Simulated Total CO₂ Emissions Over {years} Years ({simulations} Simulations)")
+
+fig = px.histogram(simulation_results, nbins=30, title="Simulated CO₂ Emissions Over 10 Years")
+st.plotly_chart(fig, use_container_width=True)
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 avg_emissions = np.mean(simulation_results)
 st.metric("Average Total CO₂ Emissions (kg)", f"{avg_emissions:,.2f}")
 

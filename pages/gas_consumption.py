@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 
 # Set up the page
 st.set_page_config(page_title="University Utilities Consumption Dashboard", layout="wide")
@@ -42,6 +43,22 @@ campuses_gas = st.sidebar.multiselect("Select Building ID(s) for Gas Data", df_g
 df_gas = df_gas[df_gas['campus_id'].isin(campuses_gas)]
 
 # --- First row: Daily and Campus Total ---
+=======
+from utils import DataManager
+
+st.set_page_config(page_title="University Utilities Consumption Dashboard", layout="wide")
+st.title("🔥 Gas Consumption Analysis")
+
+
+# Load Data
+dm = DataManager()
+df_building = dm.load_energy()
+df_gas = dm.load_gas()
+
+campuses_gas = st.sidebar.multiselect("Select Building ID(s) for Gas Data", df_gas['campus_id'].unique(), default=df_gas['campus_id'].unique())
+df_gas = df_gas[df_gas['campus_id'].isin(campuses_gas)]
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 col1, col2 = st.columns(2)
 
 with col1:
@@ -58,7 +75,10 @@ with col2:
     fig2.update_layout(xaxis_title="Campus ID", yaxis_title="Gas Consumption")
     st.plotly_chart(fig2, use_container_width=True)
 
+<<<<<<< HEAD
 # --- Second row: Monthly and Hourly Trends ---
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 col3, col4 = st.columns(2)
 
 with col3:
@@ -75,6 +95,7 @@ with col4:
     fig4.update_layout(xaxis_title="Hour", yaxis_title="Gas Consumption")
     st.plotly_chart(fig4, use_container_width=True)
 
+<<<<<<< HEAD
 # --- Peak vs Off-Peak Analysis ---
 st.subheader("⏰ Peak vs Off-Peak Consumption Comparison")
 
@@ -86,6 +107,15 @@ peak_data = df_gas[df_gas['hour'].isin(peak_hours)]
 off_peak_data = df_gas[~df_gas['hour'].isin(peak_hours)]
 
 # Group by day and compare
+=======
+st.subheader("⏰ Peak vs Off-Peak Consumption Comparison")
+
+peak_hours = list(range(6, 10)) + list(range(17, 22))
+
+peak_data = df_gas[df_gas['hour'].isin(peak_hours)]
+off_peak_data = df_gas[~df_gas['hour'].isin(peak_hours)]
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 daily_peak = peak_data.groupby('day')['consumption'].sum()
 daily_off_peak = off_peak_data.groupby('day')['consumption'].sum()
 
@@ -99,7 +129,10 @@ fig5 = px.line(comparison_df, x=comparison_df.index, y=["Peak Consumption", "Off
                title="Peak vs Off-Peak Consumption Comparison")
 st.plotly_chart(fig5, use_container_width=True)
 
+<<<<<<< HEAD
 # Summary
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 peak_vs_off_peak_ratio = daily_peak.sum() / daily_off_peak.sum()
 st.markdown("### Summary: Peak vs Off-Peak Consumption")
 st.markdown(f"**Total Peak Consumption:** {daily_peak.sum():,.2f} units")

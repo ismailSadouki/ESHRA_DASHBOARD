@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+<<<<<<< HEAD
+=======
+from utils import DataManager
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 
 from prophet import Prophet
 import plotly.graph_objects as go
@@ -10,6 +14,7 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="Utility Consumption", layout="wide")
 st.title("📊 Utility Consumption Dashboard")
 
+<<<<<<< HEAD
 # Load dataset
 @st.cache_data
 def load_data():
@@ -25,6 +30,15 @@ def load_data():
 df = load_data()
 
 # Sidebar filters
+=======
+
+# Load data
+dm = DataManager()
+df = dm.load_energy()
+
+
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.header("Filters")
 campuses = st.sidebar.multiselect(
     "Select Building ID(s)",
@@ -33,10 +47,25 @@ campuses = st.sidebar.multiselect(
 )
 df = df[df['campus_id'].isin(campuses)]
 
+<<<<<<< HEAD
+=======
+# Cache the model training process
+@st.cache_resource
+def fit_prophet_model(df):
+    df_daily = df.groupby('day')['consumption'].sum().reset_index()
+    df_daily.columns = ['ds', 'y']  # Prophet expects 'ds' and 'y' column names
+    
+    model = Prophet()
+    model.fit(df_daily)  # Fit the model once, reuse it on subsequent runs
+    
+    return model, df_daily
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 # Forecasting function
 def forecast_utility(df):
     st.subheader("🔮 Utility Consumption Forecast (Next 30 Days)")
 
+<<<<<<< HEAD
     # Prepare the data for Prophet
     df_daily = df.groupby('day')['consumption'].sum().reset_index()
     df_daily.columns = ['ds', 'y']  # Prophet expects 'ds' and 'y' column names
@@ -67,6 +96,24 @@ def forecast_utility(df):
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Forecasted Consumption', line=dict(dash='dash', color='orange', width=2)))
 
     # Add confidence intervals
+=======
+    # Fit model and get daily data
+    model, df_daily = fit_prophet_model(df)
+    
+    last_date = df_daily['ds'].max()
+    future_dates = pd.date_range(last_date, periods=31, freq='D')[1:]  # Exclude the last date (already present)
+
+    future_df = pd.DataFrame({'ds': future_dates})
+
+    forecast = model.predict(future_df)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=df_daily['ds'], y=df_daily['y'], mode='lines', name='Historical Consumption', line=dict(color='blue', width=2)))
+
+    fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Forecasted Consumption', line=dict(dash='dash', color='orange', width=2)))
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     fig.add_trace(go.Scatter(
         x=forecast['ds'], y=forecast['yhat_upper'], mode='lines', name='Upper Confidence Interval', line=dict(width=0),
         fill='tonexty', fillcolor='rgba(0,100,80,0.2)'
@@ -76,7 +123,10 @@ def forecast_utility(df):
         fill='tonexty', fillcolor='rgba(0,100,80,0.2)'
     ))
 
+<<<<<<< HEAD
     # Update layout with zoomed-in effect
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
     fig.update_layout(
         title="Utility Consumption Forecast for Next 30 Days",
         xaxis_title="Date",
@@ -91,6 +141,7 @@ def forecast_utility(df):
         yaxis=dict(range=[df_daily['y'].min() * 0.9, forecast['yhat_upper'].max() * 1.1]),  # Adjust y-axis range to include forecast confidence
     )
 
+<<<<<<< HEAD
     # Show the plot
     st.plotly_chart(fig, use_container_width=True)
 
@@ -99,11 +150,20 @@ def forecast_utility(df):
 forecast_utility(df)
 
 # Plot 1: Daily Total Consumption
+=======
+    st.plotly_chart(fig, use_container_width=True)
+
+forecast_utility(df)
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 daily_total = df.groupby('day')['consumption'].sum().reset_index()
 fig1 = px.line(daily_total, x='day', y='consumption', title="📈 Daily Total Consumption")
 fig1.update_layout(xaxis_title="Date", yaxis_title="Consumption")
 
+<<<<<<< HEAD
 # Plot 2: Total per campus
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 campus_totals = df.groupby('campus_id')['consumption'].sum().reset_index()
 fig2 = px.bar(
     campus_totals,
@@ -113,14 +173,20 @@ fig2 = px.bar(
     title="🏢 Total Consumption by Building"
 )
 
+<<<<<<< HEAD
 # Plot 3: Consumption Over Time for Selected Building
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.markdown("### 🔎 Breakdown per Building")
 selected = st.selectbox("Choose a building:", campus_totals['campus_id'])
 df_subset = df.tail(1000)
 campus_data = df_subset[df_subset['campus_id'] == selected]
 fig3 = px.line(campus_data, x='timestamp', y='consumption', title=f"📍 {selected} Consumption Over Time")
 
+<<<<<<< HEAD
 # Plot 4: Monthly Trend
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 monthly = df.groupby(['month', 'campus_id'])['consumption'].sum().reset_index()
 fig4 = px.line(
     monthly,
@@ -132,7 +198,10 @@ fig4 = px.line(
 )
 fig4.update_layout(xaxis_title="Month", yaxis_title="Consumption")
 
+<<<<<<< HEAD
 # Plot 5: Heatmap
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 heatmap_data = df.groupby(['weekday', 'hour'])['consumption'].mean().unstack().reindex(
     ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 )
@@ -143,13 +212,19 @@ fig5 = px.imshow(
     color_continuous_scale='Viridis'
 )
 
+<<<<<<< HEAD
 # Plot 6: Last 7 Days
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 recent = df[df['timestamp'] >= df['timestamp'].max() - pd.Timedelta(days=7)]
 daily_recent = recent.groupby(recent['timestamp'].dt.date)['consumption'].sum().reset_index()
 fig6 = px.bar(daily_recent, x='timestamp', y='consumption', title="📊 Last 7 Days Consumption")
 fig6.update_layout(xaxis_title="Date", yaxis_title="Consumption")
 
+<<<<<<< HEAD
 # ==== SIDE-BY-SIDE DISPLAY ====
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig1, use_container_width=True)

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.express as px
 
+<<<<<<< HEAD
 st.set_page_config(page_title="Anomaly Detection", layout="wide")
 st.title("🔍 Anomaly Detection")
 
@@ -23,14 +24,44 @@ fig = px.line(summary, x='timestamp', y='consumption', title='Building Consumpti
               labels={'timestamp': 'Date', 'consumption': 'Consumption'})
 
 # Add anomaly points
+=======
+from utils import DataManager
+
+st.set_page_config(page_title="Anomaly Detection", layout="wide")
+st.title("🔍 Anomaly Detection")
+
+# Load Data
+dm = DataManager()
+df_energy = dm.load_energy()
+df_gas = dm.load_gas()
+df_water = dm.load_water()
+
+
+
+
+summary = df_energy.groupby('timestamp')['consumption'].sum().reset_index()
+summary['rolling_mean'] = summary['consumption'].rolling(10).mean()
+summary['z_score'] = (summary['consumption'] - summary['rolling_mean']) / summary['consumption'].std()
+
+anomalies = summary[np.abs(summary['z_score']) > 2]
+
+fig = px.line(summary, x='timestamp', y='consumption', title='Building Consumption Over Time',
+              labels={'timestamp': 'Date', 'consumption': 'Consumption'})
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 fig.add_scatter(x=anomalies['timestamp'], y=anomalies['consumption'],
                 mode='markers', name='Anomalies',
                 marker=dict(color='red', size=8, symbol='x'))
 
+<<<<<<< HEAD
 # Display the plot
 st.plotly_chart(fig, use_container_width=True)
 
 # Display the detected anomalies
+=======
+st.plotly_chart(fig, use_container_width=True)
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("📋 Detected Anomalies")
 st.dataframe(anomalies[['timestamp', 'consumption', 'z_score']], use_container_width=True)
 
@@ -43,6 +74,7 @@ st.subheader("🚨Gas Abnormal Consumption Detection")
 
 
 
+<<<<<<< HEAD
 # Function to load and preprocess gas data
 def load_gas_data():
     df = pd.read_csv("gas_consumption.csv", parse_dates=["timestamp"])
@@ -62,11 +94,20 @@ rolling_window = 7
 threshold_factor = 1.5
 
 # Detect abnormal consumption
+=======
+
+rolling_window = 7
+threshold_factor = 1.5
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 df_gas['rolling_avg'] = df_gas['consumption'].rolling(window=rolling_window).mean()
 df_gas['abnormal'] = df_gas['consumption'] > (df_gas['rolling_avg'] * threshold_factor)
 abnormal_instances = df_gas[df_gas['abnormal']]
 
+<<<<<<< HEAD
 # Show warning if abnormalities found
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 if not abnormal_instances.empty:
     st.warning(
         f"⚠️ Abnormal gas consumption detected! **{len(abnormal_instances)}** instances where consumption exceeded **{threshold_factor}×** the 7-day rolling average."
@@ -115,6 +156,7 @@ st.markdown("---")
 
 
 
+<<<<<<< HEAD
 def load_water_data():
     df = pd.read_csv("water_consumption.csv")  # Update the path if needed
     df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -127,11 +169,18 @@ df_water = load_water_data()
 st.subheader("💧 Abnormal Water Consumption")
 
 # Rolling average based abnormality detection
+=======
+st.subheader("💧 Abnormal Water Consumption")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 rolling_avg = df_water["consumption"].rolling(window=7).mean()
 abnormal_threshold = 1.5
 abnormal = df_water[df_water["consumption"] > abnormal_threshold * rolling_avg]
 
+<<<<<<< HEAD
 # Alert if any
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 if not abnormal.empty:
     st.warning(
         f"🚱 Abnormal water consumption detected! **{len(abnormal)}** instances where consumption exceeded **{abnormal_threshold}×** the 7-day rolling average."
@@ -162,7 +211,10 @@ else:
     st.success("✅ No abnormal water consumption detected.")
 
 
+<<<<<<< HEAD
 # ---------- Detect Off-Peak High Usage ----------
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.markdown("##### 💡 Off-Peak Hour Alerts")
 
 off_peak_hours = list(range(0, 7))  # Midnight to 6 AM

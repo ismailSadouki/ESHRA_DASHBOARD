@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+<<<<<<< HEAD
 
 # Load Data
 @st.cache_data
@@ -17,20 +18,37 @@ def load_water_data():
 df_water = load_water_data()
 
 # Filters
+=======
+from utils import DataManager
+
+
+# Load Data
+dm = DataManager()
+df_water = dm.load_water()
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.sidebar.header("💧 Water Filters")
 campuses = st.sidebar.multiselect("Choose Campus ID(s):", df_water["campus_id"].unique(), default=df_water["campus_id"].unique())
 df_water = df_water[df_water["campus_id"].isin(campuses)]
 
+<<<<<<< HEAD
 # Page Title
 st.title("💧 Water Consumption Dashboard")
 
 # --- Section 1: Daily Water Consumption
+=======
+st.title("💧 Water Consumption Dashboard")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("📈 Daily Water Consumption")
 daily = df_water.groupby("day")["consumption"].sum().reset_index()
 fig_daily = px.line(daily, x="day", y="consumption", title="Daily Water Consumption", labels={"day": "Date", "consumption": "Units"})
 st.plotly_chart(fig_daily, use_container_width=True)
 
+<<<<<<< HEAD
 # --- Section 2: Peak vs Off-Peak Water Consumption
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("⏰ Peak vs Off-Peak Water Comparison")
 peak_hours = list(range(6, 10)) + list(range(17, 22))
 df_water["time_type"] = df_water["hour"].apply(lambda h: "Peak" if h in peak_hours else "Off-Peak")
@@ -38,7 +56,10 @@ time_compare = df_water.groupby(["day", "time_type"])["consumption"].sum().reset
 fig_compare = px.line(time_compare, x="day", y="consumption", color="time_type", title="Peak vs Off-Peak Water Consumption", labels={"day": "Date", "consumption": "Units", "time_type": "Time Type"})
 st.plotly_chart(fig_compare, use_container_width=True)
 
+<<<<<<< HEAD
 # --- Section 3: Summary
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("📊 Summary: Peak vs Off-Peak Water")
 total_peak = time_compare[time_compare["time_type"] == "Peak"]["consumption"].sum()
 total_offpeak = time_compare[time_compare["time_type"] == "Off-Peak"]["consumption"].sum()
@@ -72,6 +93,7 @@ df = df_water
 
 
 
+<<<<<<< HEAD
 # ---------- Page Setup ----------
 
 # ---------- Title ----------
@@ -79,11 +101,19 @@ st.markdown("## 💧 Water Savings Opportunities")
 st.markdown("---")
 
 # ---------- Data Preprocessing ----------
+=======
+st.markdown("## 💧 Water Savings Opportunities")
+st.markdown("---")
+
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 df["timestamp"] = pd.to_datetime(df["timestamp"])
 df["hour"] = df["timestamp"].dt.hour
 df["weekday"] = df["timestamp"].dt.day_name()
 
+<<<<<<< HEAD
 # ---------- Charts in the Same Row ----------
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 col1, col2 = st.columns(2)
 
 with col1:
@@ -116,7 +146,10 @@ with col2:
 
 st.markdown("---")
 
+<<<<<<< HEAD
 # ---------- Detect Off-Peak High Usage ----------
+=======
+>>>>>>> 4cd54e7 (Initial commit after reinitializing)
 st.subheader("🚨 High Off-Peak Usage Alerts")
 
 off_peak_hours = list(range(0, 7))  # Midnight to 6 AM
